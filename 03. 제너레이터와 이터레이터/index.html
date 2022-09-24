@@ -1,0 +1,79 @@
+<script>const log = console.log;</script>
+
+# 제너레이터/이터레이터
+- 제너레이터: 이터레이터이자 이터러블을 생성하는 함수
+
+> 제너레이터 함수를 이용하면 손쉽게 이터레이터를 만들 수 있음
+> 제너레이터는 well-formed iterator를 리턴하는 함수
+> 제너레이터를 통해 어떤 상태나 값이든지 순회할 수 있게 만들수 있음 (자바스크립트의 다형성을 높여줌)
+<script>
+    // 제너레이터는 함수명 앞에 *를 붙여 만들 수 있음
+    function *gen() {
+        yield 1;
+        if (false) yield 2;
+        yield 3;
+        // return 100; // 마지막 done을 할 때 나오는 값
+    }
+    // iter는 이터레이터이자 이터러블임 --> Symbol.iterator를 가지고 있음
+    let iter = gen();
+    log(iter[Symbol.iterator]() == iter);
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    // 순회할 때 리턴값은 순회가 이루어지지 않음
+    for (const a of gen()) log(a);
+    console.clear();
+</script>
+
+# odds
+
+> 제너레이터를 이용하면 문장으로 만들어진 것들을 순회 등의 동작을 할 수 있게 됨
+<script>
+    function* infinity(i = 0) {
+        while (true) yield i++;
+    }
+
+    function* limitation(limit, iter) {
+        for (const a of iter) {
+            yield a;
+            if (a==limit) return;
+        }
+
+    }
+    function* odds(limit) {
+        for (const a of limitation(limit, infinity(1))) {
+            if (a % 2) yield a;
+            if (a == limit) return;
+        }
+    }
+    let iter2 = odds(10);
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+
+    for (const a of odds(40)) log(a);
+
+    console.clear();
+</script>
+
+# for of, 전개 연산자, 구조 분해, 나머지 연산자
+
+<script>
+    // 전개 연산자
+    log(...odds(10));
+    log([...odds(10), ...odds(20)]);
+    // 구조 분해
+    const [head, ...tail] = odds(5);
+    log(head);
+    log(tail);
+
+    const [a, b, ...rest] = odds(10);
+    log(a);
+    log(b);
+    log(rest);
+</script>
