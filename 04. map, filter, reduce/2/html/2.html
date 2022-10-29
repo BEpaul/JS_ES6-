@@ -1,0 +1,37 @@
+<script src="../lib/fx.js"></script>
+
+<script>
+    const products = [
+        {name: '반팔티', price: 15000},
+        {name: '긴팔티', price: 20000},
+        {name: '핸드폰케이스', price: 15000},
+        {name: '후드티', price: 30000},
+        {name: '바지', price: 25000}
+    ];
+
+    // map 으로 가격 추출 -> 20000원 이하 가격 filter -> reduce 로 누적덧셈 연산(축약)
+    const add = (a, b) => a + b;
+
+
+    log(
+        reduce(
+            add,    // 여기까지는 reduce를 add하여 활용하겠다는 목표 세우기
+            map(p => p.price, [
+                // 이 부분이 숫자부라고 예상하고, 어떻게 filter할지 구상
+                {name: '반팔티', price: 15000},
+                {name: '핸드폰케이스', price: 15000},
+            ])));
+
+    log(
+        reduce(
+            add,
+            map(p => p.price,
+                filter(p => p.price < 20000, products))));
+
+    log(
+        reduce(
+            add,
+            filter(n => n >= 20000,
+                map(n => n.price, products))));
+
+</script>
